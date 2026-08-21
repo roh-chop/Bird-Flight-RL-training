@@ -1,0 +1,55 @@
+<mujoco>
+  <compiler meshdir="./mesh" angle="degree"/>
+  <option timestep="0.01" density="1.2" viscosity="0.0009" wind="0 -12 0"/>
+   <visual>
+    <map force="0.1" zfar="30"/>
+    <rgba haze="0.15 0.25 0.35 1"/>
+    <global offwidth="2560" offheight="1440" elevation="-20" azimuth="120"/>
+  </visual>
+
+  <asset>
+    <texture type="skybox" builtin="gradient" rgb1=".3 .5 .7" rgb2="0 0 0" width="32" height="512"/>
+    <texture name="grid" type="2d" builtin="checker" width="512" height="512" rgb1=".1 .2 .3" rgb2=".2 .3 .4"/>
+    <material name="grid" texture="grid" texrepeat="1 1" texuniform="true" reflectance=".2"/>
+  </asset>
+
+   <default>
+    <geom fluidshape="ellipsoid" fluidcoef = "0.5 0.25 1.5 1.0 0.5"  condim="1" friction=".7" solimp=".9 .99 .003" solref=".015 1" group="1" density="120"/>
+  </default>
+
+  <worldbody>
+    <geom name="floor" size="0 0 .05" type="plane" material="grid" condim="3"/>
+    <body name="body" pos="0.0 0.0 10" quat="1.0 0.0 0.0 0.0" >
+      <freejoint/>
+      <geom fluidshape = "none" type="mesh" name="body geom" mesh="Sphere.008" rgba="1.0 1.0 1.0 1.0" density="210"  />
+      <body name="left wing" pos="-0.35516905784606934 -0.011612997390329838 1.545763690657953e-11" quat="1.0 0.0 0.0 0.0" >
+        <joint name = "l_rot" type="hinge" range = "-15 15" axis="1 0 0"  pos="0.2825 0 0"/>
+        <joint  name = "l_flap" type="hinge" range = "-90 90" axis="0 1 0"  pos="0.2825 0 0"/>
+        <geom fluidshape = "ellipsoid" type="mesh" name="left wing geom" mesh="Sphere.005" rgba="1.0 1.0 1.0 1.0"  />
+      </body>
+      <body name="right wing" pos="0.3551686406135559 -0.011612997390329838 -1.545763690657953e-11" quat="1.0 0.0 0.0 0.0" >
+        <joint name = "r_rot" type="hinge" range = "-15 15" axis="1 0 0"  pos="-0.2825 0 0"/>
+        <joint  name = "r_flap" type="hinge" range = "-90 90" axis="0 -1 0" pos="-0.2825 0 0"/>
+        <geom fluidshape = "ellipsoid" type="mesh" name="right wing geom" mesh="Sphere.007" rgba="1.0 1.0 1.0 1.0"  />
+      </body>
+      <body name="tail" pos="3.858765751374449e-07 -0.32809510827064514 3.091527381315906e-11" quat="1.0 0.0 0.0 0.0" >
+        <joint damping="0.1" name="t_joint" type="hinge" axis="1 0 0" range = "-7 7"  pos = "0 0.09 0"/>
+        <geom fluidshape = "ellipsoid" type="mesh" name="tail geom" mesh="Sphere.009" rgba="1.0 1.0 1.0 1.0"  />
+      </body>
+    </body>
+  </worldbody>
+  <asset>
+    <mesh name="Sphere.008" file="Sphere.008.stl"/>
+    <mesh name="Sphere.005" file="Sphere.005.stl"/>
+    <mesh name="Sphere.007" file="Sphere.007.stl"/>
+    <mesh name="Sphere.009" file="Sphere.009.stl"/>
+  </asset>
+
+  <actuator>
+    <motor joint="r_rot" ctrlrange="-1 1" gear="2"/>
+    <motor joint="l_rot" ctrlrange="-1 1" gear="2"/>
+    <motor joint="t_joint" ctrlrange="-1 1" gear="1"/>
+    <motor joint="r_flap" ctrlrange="-1 1" gear="400"/>
+    <motor joint="l_flap" ctrlrange="-1 1" gear="400"/>
+  </actuator>
+</mujoco>
